@@ -1,0 +1,37 @@
+
+.local-video {
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+}
+
+#localVideo {
+  width: 150px;
+  height: 150px;
+}
+
+.remote-video {}
+
+#remoteVideo {
+  width: 250px;
+  height: 250px;
+}
+
+.user-item {
+  display: inline-flex;
+  cursor: pointer;
+  background: transparent;
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  border-radius: 2px;
+  transition: background 1s;
+  border: 1px solid rgb(110, 42, 255);
+}
+
+.user-item:hover {
+  background: rgb(110, 42, 255);
+}
+
+.user-item--touched {
+  background: linear-gradient(90deg, rgb(110, 42, 255) 0%, rgb(148, 98, 255) 100%);
+}

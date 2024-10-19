@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-server
+spec:
+  replicas: {{ .Values.server.replicaCount }}
+  selector:
+    matchLabels:
+      app: server
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: server
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: server
+        image: {{ .Values.server.image }}
+        ports:
+        - containerPort: {{ .Values.server.port }}
+        env:
+        - name: PORT
+          value: "{{ .Values.server.port }}"
+        - name: MONGO_URI
+          value: "mongodb://{{ .Values.mongodb.user.username }}:{{ .Values.mongodb.user.password }}@{{ .Release.Name }}-mongodb-service:27017/{{ .Values.mongodb.database }}"
+        volumeMounts:
+        - name: certs
+          mountPath: /app/certs
+          readOnly: true
+      volumes:
+      - name: certs
+        secret:
+          secretName: {{ .Release.Name }}-server-certs
+          items:
+            - key: certificate.crt
+              path: certificate.crt
+            - key: private.key
+              path: private.key

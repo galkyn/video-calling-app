@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-mongodb-init-script
+data:
+  init-mongo.js: |
+    db.createUser({
+      user: '{{ .Values.mongodb.user.username }}',
+      pwd: '{{ .Values.mongodb.user.password }}',
+      roles: [{ role: 'readWrite', db: '{{ .Values.mongodb.database }}' }]
+    });
+    db.createCollection("calls");

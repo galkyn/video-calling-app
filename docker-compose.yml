@@ -1,0 +1,45 @@
+services:
+  mongodb:
+    image: mongo:4.4
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+      MONGO_INITDB_DATABASE: videoCallDB
+    volumes:
+      - ./database/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+  server:
+    build: ./server
+    environment:
+      MONGO_URI: mongodb://videoCallUser:password@mongodb:27017/videoCallDB
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./certs:/app/certs
+
+  client:
+    build: ./client
+    environment:
+      - MONGO_URI=mongodb://videoCallUser:password@mongodb:27017/videoCallDB?authSource=videoCallDB
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./certs:/app/certs
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:

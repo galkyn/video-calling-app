@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-client-service
+spec:
+  selector:
+    app: client
+    release: {{ .Release.Name }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.client.port }}
+      targetPort: {{ .Values.client.port }}

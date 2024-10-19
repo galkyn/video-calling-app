@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-client
+  labels:
+    app: client
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.client.replicaCount }}
+  selector:
+    matchLabels:
+      app: client
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: client
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: certs
+          secret:
+            secretName: {{ .Release.Name }}-server-certs
+            items:
+              - key: certificate.crt
+                path: certificate.crt
+              - key: private.key
+                path: private.key
+      containers:
+      - name: client
+        image: {{ .Values.client.image }}
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: certs
+            mountPath: /app/certs
+            readOnly: true
+        env:
+        - name: MONGO_URI
+          value: mongodb://{{ .Values.mongodb.user.username }}:{{ .Values.mongodb.user.password }}@{{ .Release.Name }}-mongodb-service:27017/{{ .Values.mongodb.database }}
+        - name: PORT
+          value: "{{ .Values.client.port }}"
+        - name: CERTS_PATH
+          value: /app/certs
+        ports:
+        - containerPort: {{ .Values.client.port }}
+        resources:
+          {{- toYaml .Values.client.resources | nindent 12 }}

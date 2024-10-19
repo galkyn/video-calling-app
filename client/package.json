@@ -1,0 +1,12 @@
+{
+  "name": "video-calling-app",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=15.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "https": "^1.0.0",
+    "mongodb": "^6.9.0"
+  }
+}

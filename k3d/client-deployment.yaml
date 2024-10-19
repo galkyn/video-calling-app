@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-calling-client
+  labels:
+    app: client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      volumes:
+        - name: certs
+          secret:
+            secretName: server-certs
+      containers:
+      - name: client
+        image: k3d-registry:5005/client:latest
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: certs
+            mountPath: /app/certs
+            readOnly: true
+        env:
+        - name: MONGO_URI
+          value: mongodb://videoCallUser:password@mongodb-service:27017/videoCallDB
+        - name: PORT
+          value: "3000"
+        - name: CERTS_PATH
+          value: /app/certs
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
