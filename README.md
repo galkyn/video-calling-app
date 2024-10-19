@@ -62,3 +62,4 @@
 - Каталог `helm` та відповідні Helm-шаблони ще не реалізовані.
 - Існуючі Kubernetes-конфігурації потребують подальшої доробки та оптимізації.
 
+![image](https://github.com/user-attachments/assets/8dd1f1e5-fdf7-469b-9adf-c01425d13c86)
